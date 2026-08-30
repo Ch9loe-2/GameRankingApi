@@ -1,6 +1,17 @@
 @GameRankingApi_HostAddress = http://localhost:5194
 
-GET {{GameRankingApi_HostAddress}}/weatherforecast/
+### 获取排行榜
+GET {{GameRankingApi_HostAddress}}/api/score
 Accept: application/json
 
 ###
+
+### 添加玩家成绩
+POST {{GameRankingApi_HostAddress}}/api/score
+Content-Type: application/json
+
+{
+    "playerName": "小也",
+    "score": 2500,
+    "gameName": "测试游戏"
+}

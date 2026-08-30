@@ -7,11 +7,18 @@ var playerScores = new List<PlayerScore>()
     new PlayerScore { PlayerName = "示例玩家", Score = 1000, GameName = "测试游戏" }
 };
 
-// 获取排行榜的接口
+/// 获取排行榜的接口
 app.MapGet("/api/score", () =>
 {
     var sorted = playerScores.OrderByDescending(x => x.Score).ToList();
     return Results.Ok(sorted);
+});
+
+// 添加玩家成绩
+app.MapPost("/api/score", (PlayerScore newScore) =>
+{
+    playerScores.Add(newScore);
+    return Results.Ok(newScore);
 });
 
 // 默认首页
