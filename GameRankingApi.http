@@ -1,7 +1,13 @@
 @GameRankingApi_HostAddress = http://localhost:5194
 
-### 获取排行榜
+### 获取全部排行榜
 GET {{GameRankingApi_HostAddress}}/api/score
+Accept: application/json
+
+###
+
+### 根据 ID 获取成绩
+GET {{GameRankingApi_HostAddress}}/api/score/1
 Accept: application/json
 
 ###
