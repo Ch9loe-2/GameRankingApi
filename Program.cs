@@ -45,6 +45,23 @@ app.MapPost("/api/score", (PlayerScore newScore) =>
     return Results.Ok(newScore);
 });
 
+// 修改玩家成绩
+app.MapPut("/api/score/{id}", (int id, PlayerScore updatedScore) =>
+{
+    var score = playerScores.FirstOrDefault(x => x.Id == id);
+
+    if (score == null)
+    {
+        return Results.NotFound();
+    }
+
+    score.PlayerName = updatedScore.PlayerName;
+    score.Score = updatedScore.Score;
+    score.GameName = updatedScore.GameName;
+
+    return Results.Ok(score);
+});
+
 // 默认首页
 app.MapGet("/", () => "后端已启动！请在浏览器地址栏手动输入 /api/score");
 

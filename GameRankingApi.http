@@ -21,3 +21,28 @@ Content-Type: application/json
     "score": 2500,
     "gameName": "测试游戏"
 }
+
+
+###
+
+### 修改玩家成绩
+PUT {{GameRankingApi_HostAddress}}/api/score/2
+Content-Type: application/json
+
+{
+    "playerName": "小也",
+    "score": 5000,
+    "gameName": "新游戏"
+}
+
+###
+
+### 修改不存在的成绩
+PUT {{GameRankingApi_HostAddress}}/api/score/999
+Content-Type: application/json
+
+{
+    "playerName": "不存在的人",
+    "score": 9999,
+    "gameName": "不存在的游戏"
+}
