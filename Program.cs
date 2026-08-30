@@ -62,6 +62,21 @@ app.MapPut("/api/score/{id}", (int id, PlayerScore updatedScore) =>
     return Results.Ok(score);
 });
 
+// 删除玩家成绩
+app.MapDelete("/api/score/{id}", (int id) =>
+{
+    var score = playerScores.FirstOrDefault(x => x.Id == id);
+
+    if (score == null)
+    {
+        return Results.NotFound();
+    }
+
+    playerScores.Remove(score);
+
+    return Results.NoContent();
+});
+
 // 默认首页
 app.MapGet("/", () => "后端已启动！请在浏览器地址栏手动输入 /api/score");
 

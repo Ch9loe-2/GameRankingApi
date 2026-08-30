@@ -46,3 +46,9 @@ Content-Type: application/json
     "score": 9999,
     "gameName": "不存在的游戏"
 }
+
+
+###
+
+### 删除玩家成绩
+DELETE {{GameRankingApi_HostAddress}}/api/score/2
