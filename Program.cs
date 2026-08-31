@@ -36,6 +36,21 @@ app.MapGet("/api/score/{id}", (int id) =>
 // 添加玩家成绩
 app.MapPost("/api/score", (PlayerScore newScore) =>
 {
+    if (string.IsNullOrWhiteSpace(newScore.PlayerName))
+    {
+        return Results.BadRequest("玩家名称不能为空");
+    }
+
+    if (newScore.Score < 0)
+    {
+        return Results.BadRequest("分数不能小于 0");
+    }
+
+    if (string.IsNullOrWhiteSpace(newScore.GameName))
+    {
+        return Results.BadRequest("游戏名称不能为空");
+    }
+
     newScore.Id = playerScores.Count == 0
         ? 1
         : playerScores.Max(x => x.Id) + 1;

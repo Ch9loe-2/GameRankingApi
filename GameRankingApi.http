@@ -52,3 +52,42 @@ Content-Type: application/json
 
 ### 删除玩家成绩
 DELETE {{GameRankingApi_HostAddress}}/api/score/2
+
+
+###
+
+### 测试非法成绩
+POST {{GameRankingApi_HostAddress}}/api/score
+Content-Type: application/json
+
+{
+    "playerName": "",
+    "score": -100,
+    "gameName": ""
+}
+
+
+###
+
+### 测试负数分数
+POST {{GameRankingApi_HostAddress}}/api/score
+Content-Type: application/json
+
+{
+    "playerName": "测试玩家",
+    "score": -100,
+    "gameName": "测试游戏"
+}
+
+
+###
+
+### 测试正常成绩
+POST {{GameRankingApi_HostAddress}}/api/score
+Content-Type: application/json
+
+{
+    "playerName": "测试玩家",
+    "score": 3000,
+    "gameName": "测试游戏"
+}
