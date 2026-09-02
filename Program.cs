@@ -70,6 +70,21 @@ app.MapPut("/api/score/{id}", (int id, PlayerScore updatedScore) =>
         return Results.NotFound();
     }
 
+    if (string.IsNullOrWhiteSpace(updatedScore.PlayerName))
+    {
+        return Results.BadRequest("玩家名称不能为空");
+    }
+
+    if (updatedScore.Score < 0)
+    {
+        return Results.BadRequest("分数不能小于 0");
+    }
+
+    if (string.IsNullOrWhiteSpace(updatedScore.GameName))
+    {
+        return Results.BadRequest("游戏名称不能为空");
+    }
+
     score.PlayerName = updatedScore.PlayerName;
     score.Score = updatedScore.Score;
     score.GameName = updatedScore.GameName;

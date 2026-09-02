@@ -91,3 +91,16 @@ Content-Type: application/json
     "score": 3000,
     "gameName": "测试游戏"
 }
+
+
+###
+
+### 正常修改成绩
+PUT {{GameRankingApi_HostAddress}}/api/score/1
+Content-Type: application/json
+
+{
+    "playerName": "小也",
+    "score": 5000,
+    "gameName": "测试游戏"
+}
