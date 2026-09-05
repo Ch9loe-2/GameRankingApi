@@ -1,18 +1,12 @@
 @GameRankingApi_HostAddress = http://localhost:5194
 
-### 获取全部排行榜
+### 1. 获取排行榜
 GET {{GameRankingApi_HostAddress}}/api/score
 Accept: application/json
 
 ###
 
-### 根据 ID 获取成绩
-GET {{GameRankingApi_HostAddress}}/api/score/1
-Accept: application/json
-
-###
-
-### 添加玩家成绩
+### 2. 添加成绩
 POST {{GameRankingApi_HostAddress}}/api/score
 Content-Type: application/json
 
@@ -22,78 +16,15 @@ Content-Type: application/json
     "gameName": "测试游戏"
 }
 
-
 ###
 
-### 修改玩家成绩
-PUT {{GameRankingApi_HostAddress}}/api/score/2
-Content-Type: application/json
+### 3. 再次获取排行榜
+GET {{GameRankingApi_HostAddress}}/api/score
+Accept: application/json
 
-{
-    "playerName": "小也",
-    "score": 5000,
-    "gameName": "新游戏"
-}
-
-###
-
-### 修改不存在的成绩
-PUT {{GameRankingApi_HostAddress}}/api/score/999
-Content-Type: application/json
-
-{
-    "playerName": "不存在的人",
-    "score": 9999,
-    "gameName": "不存在的游戏"
-}
-
-
-###
-
-### 删除玩家成绩
-DELETE {{GameRankingApi_HostAddress}}/api/score/2
-
-
-###
-
-### 测试非法成绩
-POST {{GameRankingApi_HostAddress}}/api/score
-Content-Type: application/json
-
-{
-    "playerName": "",
-    "score": -100,
-    "gameName": ""
-}
-
-
-###
-
-### 测试负数分数
-POST {{GameRankingApi_HostAddress}}/api/score
-Content-Type: application/json
-
-{
-    "playerName": "测试玩家",
-    "score": -100,
-    "gameName": "测试游戏"
-}
-
-
-###
-
-### 测试正常成绩
-POST {{GameRankingApi_HostAddress}}/api/score
-Content-Type: application/json
-
-{
-    "playerName": "测试玩家",
-    "score": 3000,
-    "gameName": "测试游戏"
-}
-
-
-###
+### 根据 ID 获取成绩
+GET {{GameRankingApi_HostAddress}}/api/score/1
+Accept: application/json
 
 ### 正常修改成绩
 PUT {{GameRankingApi_HostAddress}}/api/score/1
@@ -104,3 +35,6 @@ Content-Type: application/json
     "score": 5000,
     "gameName": "测试游戏"
 }
+
+GET {{GameRankingApi_HostAddress}}/api/score/1
+Accept: application/json
