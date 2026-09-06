@@ -3,6 +3,7 @@ using GameRankingApi.DTOs;
 using GameRankingApi.Models;
 using GameRankingApi.Endpoints;
 using Microsoft.EntityFrameworkCore;
+using GameRankingApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite("Data Source=gameranking.db"));
+    builder.Services.AddScoped<ScoreService>();
 
 var app = builder.Build();
 
