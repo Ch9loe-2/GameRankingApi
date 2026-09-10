@@ -4,6 +4,7 @@ using GameRankingApi.Models;
 using GameRankingApi.Endpoints;
 using Microsoft.EntityFrameworkCore;
 using GameRankingApi.Services;
+using GameRankingApi.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,10 +30,13 @@ app.MapGet("/", () => "后端已启动！请在浏览器地址栏手动输入 /a
 
 app.Map("/error", () =>
 {
-    return Results.Problem(
-        statusCode: 500,
-        title: "服务器内部发生错误",
-        detail: "服务器处理请求时发生了未预期的错误。"
+    return Results.Json(
+        new ApiResponse<object>(
+            500,
+            "服务器内部发生错误",
+            null
+        ),
+        statusCode: 500
     );
 });
 
