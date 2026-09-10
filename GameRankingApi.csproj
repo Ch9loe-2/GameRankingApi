@@ -16,4 +16,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
   </ItemGroup>
 
+  <!-- 不让主项目把测试项目里的 .cs 文件一起编译 -->
+  <ItemGroup>
+    <Compile Remove="GameRankingApi.Tests/**/*.cs" />
+  </ItemGroup>
+
 </Project>

@@ -42,3 +42,6 @@ app.Map("/error", () =>
 });
 
 app.Run();
+public partial class Program
+{
+}
