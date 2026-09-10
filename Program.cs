@@ -14,6 +14,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite("Data Source=gameranking.db"));
     builder.Services.AddScoped<ScoreService>();
+    builder.Services.AddLogging();
 
 var app = builder.Build();
 
