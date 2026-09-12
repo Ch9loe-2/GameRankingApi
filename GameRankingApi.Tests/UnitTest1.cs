@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Net.Http.Json;
 using GameRankingApi.Common;
 using GameRankingApi.Models;
@@ -489,83 +489,83 @@ public class ApiTests
     }
 
     [Fact]
-public async Task GetTopScores_ReturnsTopNScores()
-{
-    // Arrange
-    using var factory = new CustomWebApplicationFactory();
-    using var client = factory.CreateClient();
-
-    await client.PostAsJsonAsync("/api/score", new
+    public async Task GetTopScores_ReturnsTopNScores()
     {
-        PlayerName = "小明",
-        Score = 1000,
-        GameName = "游戏"
-    });
+        // Arrange
+        using var factory = new CustomWebApplicationFactory();
+        using var client = factory.CreateClient();
 
-    await client.PostAsJsonAsync("/api/score", new
+        await client.PostAsJsonAsync("/api/score", new
+        {
+            PlayerName = "小明",
+            Score = 1000,
+            GameName = "游戏"
+        });
+
+        await client.PostAsJsonAsync("/api/score", new
+        {
+            PlayerName = "小红",
+            Score = 5000,
+            GameName = "游戏"
+        });
+
+        await client.PostAsJsonAsync("/api/score", new
+        {
+            PlayerName = "小王",
+            Score = 3000,
+            GameName = "游戏"
+        });
+
+        await client.PostAsJsonAsync("/api/score", new
+        {
+            PlayerName = "小李",
+            Score = 2000,
+            GameName = "游戏"
+        });
+
+        // Act
+        var response = await client.GetAsync(
+            "/api/score/top/2"
+        );
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var result = await response.Content.ReadFromJsonAsync<
+            ApiResponse<List<PlayerScore>>
+        >();
+
+        Assert.NotNull(result);
+        Assert.NotNull(result.Data);
+
+        Assert.Equal(2, result.Data.Count);
+
+        // 验证只返回分数最高的两条
+        Assert.Equal(5000, result.Data[0].Score);
+        Assert.Equal(3000, result.Data[1].Score);
+    }
+
+    [Fact]
+    public async Task GetTopScores_WithInvalidCount_ReturnsBadRequest()
     {
-        PlayerName = "小红",
-        Score = 5000,
-        GameName = "游戏"
-    });
+        // Arrange
+        using var factory = new CustomWebApplicationFactory();
+        using var client = factory.CreateClient();
 
-    await client.PostAsJsonAsync("/api/score", new
-    {
-        PlayerName = "小王",
-        Score = 3000,
-        GameName = "游戏"
-    });
+        // Act
+        var response = await client.GetAsync(
+            "/api/score/top/0"
+        );
 
-    await client.PostAsJsonAsync("/api/score", new
-    {
-        PlayerName = "小李",
-        Score = 2000,
-        GameName = "游戏"
-    });
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
-    // Act
-    var response = await client.GetAsync(
-        "/api/score/top/2"
-    );
+        var result = await response.Content.ReadFromJsonAsync<
+            ApiResponse<object>
+        >();
 
-    // Assert
-    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-
-    var result = await response.Content.ReadFromJsonAsync<
-        ApiResponse<List<PlayerScore>>
-    >();
-
-    Assert.NotNull(result);
-    Assert.NotNull(result.Data);
-
-    Assert.Equal(2, result.Data.Count);
-
-    // 验证只返回分数最高的两条
-    Assert.Equal(5000, result.Data[0].Score);
-    Assert.Equal(3000, result.Data[1].Score);
-}
-
-[Fact]
-public async Task GetTopScores_WithInvalidCount_ReturnsBadRequest()
-{
-    // Arrange
-    using var factory = new CustomWebApplicationFactory();
-    using var client = factory.CreateClient();
-
-    // Act
-    var response = await client.GetAsync(
-        "/api/score/top/0"
-    );
-
-    // Assert
-    Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-
-    var result = await response.Content.ReadFromJsonAsync<
-        ApiResponse<object>
-    >();
-
-    Assert.NotNull(result);
-    Assert.Equal(400, result.Code);
-    Assert.Equal("数量必须大于 0", result.Message);
-}
+        Assert.NotNull(result);
+        Assert.Equal(400, result.Code);
+        Assert.Equal("数量必须大于 0", result.Message);
+    }
 }

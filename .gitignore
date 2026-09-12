@@ -1,4 +1,36 @@
+# 编译产物
 bin/
 obj/
+[Dd]ebug/
+[Rr]elease/
+publish/
+artifacts/
+
+# 数据库文件（可用 Migrations 重建）
+*.db
+*.db-shm
+*.db-wal
+*.db-journal
+
+# 用户特定文件
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.userprefs
+
+# IDE / 编辑器
+.vs/
+.vscode/
+.idea/
+*.DotSettings.user
+
+# 测试与覆盖率
+[Tt]est[Rr]esult*/
+coverage*.json
+coverage*.xml
+
+# 操作系统
 .DS_Store
-gameranking.db
+Thumbs.db
+Desktop.ini
