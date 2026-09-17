@@ -34,3 +34,6 @@ coverage*.xml
 .DS_Store
 Thumbs.db
 Desktop.ini
+
+# 面试笔记（本地文档，不提交到 GitHub）
+interview-notes/
