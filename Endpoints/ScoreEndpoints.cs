@@ -2,6 +2,7 @@ using GameRankingApi.Common;
 using GameRankingApi.DTOs;
 using GameRankingApi.Models;
 using GameRankingApi.Services;
+
 namespace GameRankingApi.Endpoints;
 
 public static class ScoreEndpoints
@@ -9,82 +10,86 @@ public static class ScoreEndpoints
     public static void MapScoreEndpoints(this WebApplication app)
     {
         // 获取排行榜
-        app.MapGet("/api/score", async (ScoreService service) =>
+        app.MapGet("/api/score", async (ScoreService service, HttpContext http) =>
         {
-            var scores = await service.GetAllAsync();
+            var ct = http.RequestAborted;
+            var scores = await service.GetAllAsync(ct);
 
-    return Results.Ok(
-        new ApiResponse<List<PlayerScore>>(
-            200,
-            "查询成功",
-            scores
-        )
-    );
-})
-.WithSummary("获取排行榜")
-.WithDescription("获取所有玩家成绩，并按照分数从高到低排序。");
+            return Results.Ok(
+                new ApiResponse<List<PlayerScore>>(
+                    200,
+                    "查询成功",
+                    scores
+                )
+            );
+        })
+        .WithSummary("获取排行榜")
+        .WithDescription("获取所有玩家成绩，并按照分数从高到低排序。");
 
-       // 根据 ID 获取成绩
-        app.MapGet("/api/score/{id}", async (int id, ScoreService service) =>
+        // 根据 ID 获取成绩
+        app.MapGet("/api/score/{id}", async (int id, ScoreService service, HttpContext http) =>
         {
-            var score = await service.GetByIdAsync(id);
+            var ct = http.RequestAborted;
+            var score = await service.GetByIdAsync(id, ct);
 
-    if (score == null)
-    {
-        return Results.NotFound(
-            new ApiResponse<object>(
-                404,
-                "成绩不存在",
-                null
-            )
-        );
-    }
+            if (score == null)
+            {
+                return Results.NotFound(
+                    new ApiResponse<object>(
+                        404,
+                        "成绩不存在",
+                        null
+                    )
+                );
+            }
 
-    return Results.Ok(
-        new ApiResponse<PlayerScore>(
-            200,
-            "查询成功",
-            score
-        )
-    );
-})
-.WithSummary("根据 ID 获取成绩")
-.WithDescription("根据玩家成绩记录的 ID 查询具体成绩信息。");
+            return Results.Ok(
+                new ApiResponse<PlayerScore>(
+                    200,
+                    "查询成功",
+                    score
+                )
+            );
+        })
+        .WithSummary("根据 ID 获取成绩")
+        .WithDescription("根据玩家成绩记录的 ID 查询具体成绩信息。");
 
         // 根据游戏名称获取排行榜
-        app.MapGet("/api/score/game/{gameName}", async (string gameName, ScoreService service) =>
+        app.MapGet("/api/score/game/{gameName}", async (string gameName, ScoreService service, HttpContext http) =>
         {
-            var scores = await service.GetByGameNameAsync(gameName);
+            var ct = http.RequestAborted;
+            var scores = await service.GetByGameNameAsync(gameName, ct);
 
-    return Results.Ok(
-        new ApiResponse<List<PlayerScore>>(
-            200,
-            "查询成功",
-            scores
-        )
-    );
-})
-.WithSummary("根据游戏名称获取排行榜")
-.WithDescription("查询指定游戏的所有玩家成绩，并按照分数从高到低排序。");
+            return Results.Ok(
+                new ApiResponse<List<PlayerScore>>(
+                    200,
+                    "查询成功",
+                    scores
+                )
+            );
+        })
+        .WithSummary("根据游戏名称获取排行榜")
+        .WithDescription("查询指定游戏的所有玩家成绩，并按照分数从高到低排序。");
 
         // 根据玩家名称查询成绩
-        app.MapGet("/api/score/player/{playerName}", async (string playerName, ScoreService service) =>
+        app.MapGet("/api/score/player/{playerName}", async (string playerName, ScoreService service, HttpContext http) =>
         {
-            var scores = await service.GetByPlayerNameAsync(playerName);
+            var ct = http.RequestAborted;
+            var scores = await service.GetByPlayerNameAsync(playerName, ct);
 
-    return Results.Ok(
-        new ApiResponse<List<PlayerScore>>(
-            200,
-            "查询成功",
-            scores
-        )
-    );
-})
-.WithSummary("根据玩家名称查询成绩")
-.WithDescription("查询指定玩家的所有游戏成绩，并按照分数从高到低排序。");
+            return Results.Ok(
+                new ApiResponse<List<PlayerScore>>(
+                    200,
+                    "查询成功",
+                    scores
+                )
+            );
+        })
+        .WithSummary("根据玩家名称查询成绩")
+        .WithDescription("查询指定玩家的所有游戏成绩，并按照分数从高到低排序。");
 
         // 获取 Top N 排行榜
-        app.MapGet("/api/score/top/{count}", async (int count, ScoreService service) =>
+        app.MapGet("/api/score/top/{count}", async (int count, ScoreService service, HttpContext http) =>
         {
             if (count <= 0)
             {
@@ -95,118 +100,120 @@ public static class ScoreEndpoints
                         null
                     )
                 );
-    }
+            }
 
-    var scores = await service.GetTopAsync(count);
+            var ct = http.RequestAborted;
+            var scores = await service.GetTopAsync(count, ct);
 
-    return Results.Ok(
-        new ApiResponse<List<PlayerScore>>(
-            200,
-            "查询成功",
-            scores
-        )
-    );
-})
-.WithSummary("获取 Top N 排行榜")
-.WithDescription("获取分数最高的前 N 名玩家成绩。");
-
-
+            return Results.Ok(
+                new ApiResponse<List<PlayerScore>>(
+                    200,
+                    "查询成功",
+                    scores
+                )
+            );
+        })
+        .WithSummary("获取 Top N 排行榜")
+        .WithDescription("获取分数最高的前 N 名玩家成绩。");
 
         // 添加玩家成绩
-        app.MapPost("/api/score", async (PlayerScoreRequest request, ScoreService service) =>
+        app.MapPost("/api/score", async (PlayerScoreRequest request, ScoreService service, HttpContext http) =>
         {
             try
             {
-                var newScore = await service.CreateAsync(request);
+                var ct = http.RequestAborted;
+                var newScore = await service.CreateAsync(request, ct);
 
-        return Results.Created(
-            $"/api/score/{newScore.Id}",
-            new ApiResponse<PlayerScore>(
-                201,
-                "添加成功",
-                newScore
-            )
-        );
-    }
-    catch (ArgumentException ex)
-    {
-        return Results.BadRequest(
-            new ApiResponse<object>(
-                400,
-                ex.Message,
-                null
-            )
-        );
-    }
-})
-.WithSummary("添加玩家成绩")
-.WithDescription("添加一条新的玩家游戏成绩记录，并保存到 SQLite 数据库。");
+                return Results.Created(
+                    $"/api/score/{newScore.Id}",
+                    new ApiResponse<PlayerScore>(
+                        201,
+                        "添加成功",
+                        newScore
+                    )
+                );
+            }
+            catch (ArgumentException ex)
+            {
+                return Results.BadRequest(
+                    new ApiResponse<object>(
+                        400,
+                        ex.Message,
+                        null
+                    )
+                );
+            }
+        })
+        .WithSummary("添加玩家成绩")
+        .WithDescription("添加一条新的玩家游戏成绩记录，并保存到 SQLite 数据库。");
 
         // 修改玩家成绩
-        app.MapPut("/api/score/{id}", async (int id, PlayerScoreRequest request, ScoreService service) =>
+        app.MapPut("/api/score/{id}", async (int id, PlayerScoreRequest request, ScoreService service, HttpContext http) =>
         {
             try
             {
-                var score = await service.UpdateAsync(id, request);
+                var ct = http.RequestAborted;
+                var score = await service.UpdateAsync(id, request, ct);
 
-        if (score == null)
+                if (score == null)
+                {
+                    return Results.NotFound(
+                        new ApiResponse<object>(
+                            404,
+                            "成绩不存在",
+                            null
+                        )
+                    );
+                }
+
+                return Results.Ok(
+                    new ApiResponse<PlayerScore>(
+                        200,
+                        "修改成功",
+                        score
+                    )
+                );
+            }
+            catch (ArgumentException ex)
+            {
+                return Results.BadRequest(
+                    new ApiResponse<object>(
+                        400,
+                        ex.Message,
+                        null
+                    )
+                );
+            }
+        })
+        .WithSummary("修改玩家成绩")
+        .WithDescription("根据成绩记录 ID 修改玩家名称、分数和游戏名称。");
+
+        // 删除玩家成绩
+        app.MapDelete("/api/score/{id}", async (int id, ScoreService service, HttpContext http) =>
         {
-            return Results.NotFound(
+            var ct = http.RequestAborted;
+            var deleted = await service.DeleteAsync(id, ct);
+
+            if (!deleted)
+            {
+                return Results.NotFound(
+                    new ApiResponse<object>(
+                        404,
+                        "成绩不存在",
+                        null
+                    )
+                );
+            }
+
+            return Results.Ok(
                 new ApiResponse<object>(
-                    404,
-                    "成绩不存在",
+                    200,
+                    "删除成功",
                     null
                 )
             );
-        }
-
-        return Results.Ok(
-            new ApiResponse<PlayerScore>(
-                200,
-                "修改成功",
-                score
-            )
-        );
-    }
-    catch (ArgumentException ex)
-    {
-        return Results.BadRequest(
-            new ApiResponse<object>(
-                400,
-                ex.Message,
-                null
-            )
-        );
-    }
-})
-.WithSummary("修改玩家成绩")
-.WithDescription("根据成绩记录 ID 修改玩家名称、分数和游戏名称。");
-
-        // 删除玩家成绩
-        app.MapDelete("/api/score/{id}", async (int id, ScoreService service) =>
-        {
-            var deleted = await service.DeleteAsync(id);
-
-    if (!deleted)
-    {
-        return Results.NotFound(
-            new ApiResponse<object>(
-                404,
-                "成绩不存在",
-                null
-            )
-        );
-    }
-
-    return Results.Ok(
-        new ApiResponse<object>(
-            200,
-            "删除成功",
-            null
-        )
-    );
-})
-.WithSummary("删除玩家成绩")
-.WithDescription("根据成绩记录 ID 删除指定的玩家成绩。");
+        })
+        .WithSummary("删除玩家成绩")
+        .WithDescription("根据成绩记录 ID 删除指定的玩家成绩。");
     }
 }
