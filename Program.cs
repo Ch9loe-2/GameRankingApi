@@ -18,6 +18,13 @@ builder.Services.AddLogging();
 
 var app = builder.Build();
 
+// 启动时自动创建数据库（不存在时）
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await db.Database.EnsureCreatedAsync();
+}
+
 app.UseExceptionHandler("/error");
 
 app.MapOpenApi();

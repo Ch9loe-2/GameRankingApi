@@ -33,14 +33,6 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             {
                 options.UseSqlite(_connection);
             });
-
-            var serviceProvider = services.BuildServiceProvider();
-
-            using var scope = serviceProvider.CreateScope();
-
-            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-            db.Database.EnsureCreated();
         });
     }
 
